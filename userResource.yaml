@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://api.cerbos.dev/latest/cerbos/policy/v1/Policy.schema.json
+
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: default
+
+  # This resource file is reviewed for when checking permissions when a resource
+  # is of `kind` "userResource"
+  resource: userResource
+
+  rules:
+    # If the `principal`s role is `global-admin` then all the actions are allowed.
+    - actions:
+        - "*"
+      effect: EFFECT_ALLOW
+      roles:
+        - global-admin
+
+    # Any sales-agent can create a resource
+    - actions:
+        - onboard
+      effect: EFFECT_ALLOW
+      roles:
+        - sales-agent
+
+    # Any sales-agent can validate an onboard request
+    - actions:
+        - onboard-validation
+      effect: EFFECT_ALLOW
+      roles:
+        - sales-agent
+
+    # Any sales-agent can create-account based on the onboard request
+    - actions:
+        - create-account
+      effect: EFFECT_ALLOW
+      roles:
+        - sales-agent
+
+    # Any sales-agent can not delete a user resource
+    - actions:
+        - delete
+      effect: EFFECT_DENY
+      roles:
+        - sales-agent
+  

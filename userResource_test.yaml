@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://api.cerbos.dev/latest/cerbos/policy/v1/TestSuite.schema.json
+
+name: User Resource test suite
+description: Tests for verifying the userResource policy
+
+principals:
+  bob:
+    id: bob
+    roles:
+      - global-admin
+  ife:
+    id: ife
+    roles:
+      - sales-agent
+
+resources:
+  resource1:
+    id: resource1
+    kind: userResource
+
+tests:
+  - name: Global Admin Role
+    input:
+      principals:
+        - bob
+      resources:
+        - resource1
+      actions:
+        - onboard
+        - onboard-validation
+        - create-account
+        - delete
+
+    expected:
+      - principal: bob
+        resource: resource1
+        actions:
+          onboard: EFFECT_ALLOW
+          onboard-validation: EFFECT_ALLOW
+          create-account: EFFECT_ALLOW
+          delete: EFFECT_ALLOW
+
+  - name: Sales Agent Role
+    input:
+      principals:
+        - ife
+      resources:
+        - resource1
+      actions:
+        - onboard
+        - onboard-validation
+        - create-account
+        - delete
+
+    expected:
+      - principal: ife
+        resource: resource1
+        actions:
+          onboard: EFFECT_ALLOW
+          onboard-validation: EFFECT_ALLOW
+          create-account: EFFECT_ALLOW
+          delete: EFFECT_DENY
